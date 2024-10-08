@@ -40,8 +40,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const squares = [];
   const gameBorderIndices = [];
+  let gameRunning = true;
   
-  let snakeCurrentIndex;
+  let snake = []; // New array to store snake body positions
   let direction = "ArrowRight"; // Initial direction
   let moveInterval;
 
@@ -62,69 +63,61 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function startGame() {
-    snakeCurrentIndex = validIndices[Math.floor(Math.random() * validIndices.length)];
-    squares[snakeCurrentIndex].classList.add("snake");
+    // Start the snake in the middle of the board
+    const startIndex = validIndices[Math.floor(Math.random() * validIndices.length)]; // You can adjust this value as needed
+    snake = [startIndex, startIndex - 1, startIndex - 2];
+    
+    // Add snake class to initial snake body
+    snake.forEach(index => squares[index].classList.add("snake"));
+    
     createFood();
     moveInterval = setInterval(moveSnakeAutomatically, 100); // Move every 100ms
   }
 
-  function gameOver() {
-    alert("Game Over");
-    clearInterval(moveInterval);
-  }
+  let currentDirection ="ArrowRight";
+  let nextDirection ="ArrowRight";
+
 
   function moveSnakeAutomatically() {
-    // Remove snake class from previous positions
-    squares.forEach(square => square.classList.remove("snake"));
+    if(!gameRunning);
+    squares[snake[snake.length -1]].classList.remove("snake");
 
-    // Update snakeCurrentIndex based on direction
-    switch (direction) {
+    for(let i = snake.length -1; i > 0; i--) {
+      snake[i] = snake[i -1];
+    }
+
+    currentDirection = nextDirection;
+    
+    // Update head based on direction
+    switch (currentDirection) {
       case "ArrowLeft":
-        if (snakeCurrentIndex !== 0) {
-          snakeCurrentIndex -= 1;
-
-          if(snakeCurrentIndex % 28 === 0) {
-            gameOver()
+          if (!squares[snake[0] - 1].classList.contains("game-border") && snake[0] % 28 !== 0) {
+            snake[0] -= 1;
+          } else {
+            alert(`Game Over your score is ${scoreCount}`);
+            gameRunning = false; // Stop the game after the alert
           }
-        }
         break;
       case "ArrowRight":
-        if (snakeCurrentIndex !== 0) {
-          snakeCurrentIndex += 1;
-
-          if(snakeCurrentIndex % 28 === 27) {
-            gameOver()
-          }
-        } 
-        break;
-        case "ArrowUp":
-            if (snakeCurrentIndex - 28 >= 0) {
-                snakeCurrentIndex -= 28;
-        
-                // Check if the new position is in the range 1 to 26
-                if ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26].includes(snakeCurrentIndex)) {
-                    gameOver();
-                }
-            }
-            break;
-      case "ArrowDown":
-        if (snakeCurrentIndex + 28 < squares.length) {
-          snakeCurrentIndex += 28;
-
-
-          if ([757, 758, 759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777, 778, 779, 780, 781, 782].includes(snakeCurrentIndex)) {
-            gameOver();
+        if (!squares[snake[0] + 1].classList.contains("game-border")) {
+          snake[0] += 1;
         }
-
+        break;
+      case "ArrowUp":
+        if (!squares[snake[0] - 28].classList.contains("game-border")) {
+          snake[0] -= 28;
+        }
+        break;
+      case "ArrowDown":
+        if (!squares[snake[0] + 28].classList.contains("game-border")) {
+          snake[0] += 28;
         }
         break;
     }
-
     
-
-    // Add snake class to the new position
-    squares[snakeCurrentIndex].classList.add("snake");
-
+    // Add snake class to new head position
+    squares[snake[0]].classList.add("snake");
+    
     // Check for food
     foodEaten();
   }
@@ -132,7 +125,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function handleKeyPress(e) {
     if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
-      direction = e.key; // Update direction
+      if (
+        (e.key === "ArrowLeft" && currentDirection !== "ArrowRight") ||
+        (e.key === "ArrowRight" && currentDirection !== "ArrowLeft") ||
+        (e.key === "ArrowUp" && currentDirection !== "ArrowDown") ||
+        (e.key === "ArrowDown" && currentDirection !== "ArrowUp")
+      ) {
+        nextDirection = e.key
+      }
     }
   }
 
@@ -147,8 +147,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function foodEaten() {
-    if (squares[snakeCurrentIndex].classList.contains("snake-food")) {
-      squares[snakeCurrentIndex].classList.remove("snake-food");
+    if (squares[snake[0]].classList.contains("snake-food")) {
+      squares[snake[0]].classList.remove("snake-food");
+      // Grow snake
+      snake.push(snake[snake.length - 1]);
       scoreCount++; // Increase score
       scoreDisplay.textContent = `score: ${scoreCount}`;
       createFood();
