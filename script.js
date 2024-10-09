@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   function moveSnakeAutomatically() {
-    if(!gameRunning);
+    if(!gameRunning) return;
     squares[snake[snake.length -1]].classList.remove("snake");
 
     for(let i = snake.length -1; i > 0; i--) {
@@ -92,10 +92,10 @@ document.addEventListener("DOMContentLoaded", () => {
     switch (currentDirection) {
       case "ArrowLeft":
           if (!squares[snake[0] - 1].classList.contains("game-border") && snake[0] % 28 !== 0) {
-            snake[0] -= 1;
+            snake[0] -=1;
           } else {
-            alert(`Game Over your score is ${scoreCount}`);
-            gameRunning = false; // Stop the game after the alert
+            alert("game over");
+            return;
           }
         break;
       case "ArrowRight":
