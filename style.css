@@ -2,6 +2,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: url(https://i.pinimg.com/originals/e4/c2/73/e4c27345b39ac36bec111bb3c15c5ffa.jpg);
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
 }
 
 .overlay {
@@ -24,7 +28,6 @@ body {
   border-radius: 20px;
   text-align: center;
   font-family: 'VT323';
-  font-size: 2em;
   text-align:center;
 }
 
@@ -38,6 +41,7 @@ body {
   flex-direction: column;
   align-items: center;
   margin: 50px;
+  border-radius: 20px;
 }
 
 .game-container {
@@ -55,16 +59,36 @@ body {
 }
 
 .game-border {
-  background-color: aqua;
+  background-color: rgb(3, 46, 9);
 }
 
 .snake {
   background-color: green;
   border: 1px solid black;
-  border-radius: 5px;
+  border-radius: 3px;
 }
 
 .snake-food {
-  background-color: brown;
+  background-color: rgb(228, 214, 26);
+  border-radius: 10px;
 }
 
+
+.animated-text {
+  font-size: 1em; /* Adjust as needed */
+  color: rgb(245, 38, 23); /* Adjust color as needed */
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+@keyframes shake {
+  0% { transform: translate(1px, 0); }
+  25% { transform: translate(-1px, 0); }
+  50% { transform: translate(1px, 0); }
+  75% { transform: translate(-1px, 0); }
+  100% { transform: translate(0, 0); }
+}
+
+h1, h2 {
+  font-size: 3em;
+  color: antiquewhite;
+}
