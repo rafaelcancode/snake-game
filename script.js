@@ -74,53 +74,84 @@ document.addEventListener("DOMContentLoaded", () => {
     moveInterval = setInterval(moveSnakeAutomatically, 100); // Move every 100ms
   }
 
+  function gameOver() {
+    const overlay = document.querySelector('.overlay');
+    overlay.classList.add('visible'); // Show overlay
+    clearInterval(moveInterval)
+    // overlay.textContent = `Game over! your score: ${scoreCount}`
+  }
+
   let currentDirection ="ArrowRight";
   let nextDirection ="ArrowRight";
 
 
   function moveSnakeAutomatically() {
-    if(!gameRunning);
-    squares[snake[snake.length -1]].classList.remove("snake");
-
-    for(let i = snake.length -1; i > 0; i--) {
-      snake[i] = snake[i -1];
+    if (!gameRunning) return; // Add a return to exit if the game is not running
+  
+    // Remove the snake class from the tail
+    squares[snake[snake.length - 1]].classList.remove("snake");
+  
+    // Shift the snake's body
+    for (let i = snake.length - 1; i > 0; i--) {
+      snake[i] = snake[i - 1];
     }
-
+  
     currentDirection = nextDirection;
-    
+    let newHead;
+  
     // Update head based on direction
     switch (currentDirection) {
       case "ArrowLeft":
-          if (!squares[snake[0] - 1].classList.contains("game-border") && snake[0] % 28 !== 0) {
-            snake[0] -= 1;
-          } else {
-            alert(`Game Over your score is ${scoreCount}`);
-            gameRunning = false; // Stop the game after the alert
-          }
+        if (!squares[snake[0] - 1].classList.contains("game-border") && snake[0] % 28 !== 0) {
+          newHead = snake[0] - 1;
+        } else {
+          gameOver();
+          gameRunning = false;
+        }
         break;
       case "ArrowRight":
-        if (!squares[snake[0] + 1].classList.contains("game-border")) {
-          snake[0] += 1;
+        if (!squares[snake[0] + 1].classList.contains("game-border") && snake[0] % 28 !== 27) {
+          newHead = snake[0] + 1;
+        } else {
+          gameOver();
+          gameRunning = false;
         }
         break;
       case "ArrowUp":
-        if (!squares[snake[0] - 28].classList.contains("game-border")) {
-          snake[0] -= 28;
+        if (!squares[snake[0] - 28].classList.contains("game-border") && snake[0] - 28 > 27) {
+          newHead = snake[0] - 28;
+        } else {
+          gameOver();
+          gameRunning = false;
         }
         break;
       case "ArrowDown":
-        if (!squares[snake[0] + 28].classList.contains("game-border")) {
-          snake[0] += 28;
+        if (!squares[snake[0] + 28].classList.contains("game-border") && snake[0] + 28 < 784) {
+          newHead = snake[0] + 28;
+        } else {
+          gameOver();
+          gameRunning = false;
         }
         break;
     }
-    
-    // Add snake class to new head position
-    squares[snake[0]].classList.add("snake");
-    
+  
+    // Check for collision with the body
+    if (newHead !== undefined && snake.includes(newHead)) {
+      gameOver();
+      gameRunning = false;
+      return; // Exit if there's a collision
+    }
+  
+    // Update the head position
+    if (newHead !== undefined) {
+      snake[0] = newHead;
+      squares[snake[0]].classList.add("snake"); // Add snake class to new head position
+    }
+  
     // Check for food
     foodEaten();
   }
+  
   
 
   function handleKeyPress(e) {

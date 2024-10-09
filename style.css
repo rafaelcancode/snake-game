@@ -1,40 +1,70 @@
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .game-container {
-    width: 560px;
-    height: 560px;
-    flex-wrap: wrap;
-    display: flex;
-  }
-  
-  .game-container div {
-    width: 20px;
-    height: 20px;
-    box-sizing: border-box;
-    /* border: solid red; */
-  }
-  
-  .game-border {
-    background-color: aqua;
-  }
-  
-  .snake {
-    background-color: green;
-    border: 1px solid black;
-    border-radius: 5px;
-  }
-  
-  .snake-food {
-    background-color: brown;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.overlay {
+  z-index: 1000;
+  display: flex;
+  position: absolute;
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjust for element size */
+  width: 300px; /* Set a fixed width */
+  height: 200px; /* Set a fixed height */
+  background-color: black; /* Dark semi-transparent background */
+  color: white; /* Text color */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  font-size: 2rem; /* Larger font size */
+  opacity: 0; /* Start transparent */
+  transition: opacity 0.3s ease; /* Smooth transition */
+  pointer-events: none; /* Ignore mouse events */
+  border-radius: 20px;
+  text-align: center;
+  font-family: 'VT323';
+  font-size: 2em;
+  text-align:center;
+}
+
+.overlay.visible {
+  opacity: 1; /* Fully visible */
+  pointer-events: auto; /* Enable mouse events */
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 50px;
+}
+
+.game-container {
+  width: 560px;
+  height: 560px;
+  flex-wrap: wrap;
+  display: flex;
+}
+
+.game-container div {
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  /* border: solid red; */
+}
+
+.game-border {
+  background-color: aqua;
+}
+
+.snake {
+  background-color: green;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+.snake-food {
+  background-color: brown;
+}
+
